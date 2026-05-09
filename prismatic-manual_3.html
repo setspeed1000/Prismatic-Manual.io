@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRISMATIC — Game Manual v3.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #C0392B;
+  --yellow: #D4A017;
+  --green: #1A7A4A;
+  --blue: #1A5DAD;
+  --bg: #0D0D0F;
+  --surface: #141418;
+  --surface2: #1C1C22;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #F0EFE8;
+  --muted: #8A8980;
+  --accent: #E8E0C8;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.logo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.header-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* ── SEARCH ── */
+.search-bar {
+  padding: 10px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.search-inner {
+  position: relative;
+  max-width: 480px;
+}
+
+.search-inner svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+
+#search {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 9px 12px 9px 36px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+#search:focus { border-color: rgba(255,255,255,0.25); }
+#search::placeholder { color: var(--muted); }
+
+#search-results {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 200;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.sr-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.sr-item:last-child { border-bottom: none; }
+.sr-item:hover { background: var(--surface); color: var(--text); }
+.sr-item strong { color: var(--text); font-weight: 500; }
+.sr-empty { padding: 12px 14px; font-size: 13px; color: var(--muted); }
+
+/* ── LAYOUT ── */
+.layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - 101px);
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+nav {
+  width: 220px;
+  min-width: 220px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  overflow-y: auto;
+  height: 100%;
+  padding: 16px 0;
+}
+
+.nav-group-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 12px 18px 4px;
+}
+
+.nav-group-label:first-child { padding-top: 4px; }
+
+.nav-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  padding: 7px 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+  line-height: 1.4;
+}
+
+.nav-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+.nav-btn.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(232,224,200,0.05);
+  font-weight: 500;
+}
+
+/* ── CONTENT ── */
+.content {
+  flex: 1;
+  overflow-y: scroll;
+  height: 100%;
+  padding: 32px 40px;
+  max-width: 860px;
+}
+
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── TYPOGRAPHY ── */
+.page-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.page-sub {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  margin-bottom: 28px;
+  letter-spacing: 0.02em;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.card p {
+  font-size: 14px;
+  color: rgba(240,239,232,0.8);
+  line-height: 1.7;
+}
+
+.card p + p { margin-top: 8px; }
+
+/* ── TABLES ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+thead tr { border-bottom: 1px solid var(--border2); }
+
+th {
+  text-align: left;
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  color: rgba(240,239,232,0.85);
+  line-height: 1.5;
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+td strong, .em { color: var(--accent); font-weight: 500; }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.b-dq { background: rgba(192,57,43,0.2); color: #F08070; border: 1px solid rgba(192,57,43,0.3); }
+.b-tech { background: rgba(212,160,23,0.15); color: #E0C060; border: 1px solid rgba(212,160,23,0.25); }
+.b-foul { background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border2); }
+.b-insp { background: rgba(26,93,173,0.2); color: #7AB0F0; border: 1px solid rgba(26,93,173,0.3); }
+.b-none { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.b-red  { background: rgba(192,57,43,0.15); color: #F08070; border: 1px solid rgba(192,57,43,0.25); }
+.b-yellow{ background: rgba(212,160,23,0.15); color: #E0C060; border: 1px solid rgba(212,160,23,0.25); }
+.b-green{ background: rgba(26,122,74,0.15); color: #60D090; border: 1px solid rgba(26,122,74,0.25); }
+.b-blue { background: rgba(26,93,173,0.2); color: #7AB0F0; border: 1px solid rgba(26,93,173,0.3); }
+
+/* ── COLOUR STRIPE ── */
+.colour-stripe {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 24px;
+}
+.colour-stripe div {
+  height: 3px;
+  flex: 1;
+  border-radius: 2px;
+}
+
+/* ── CLIMB TIERS ── */
+.tier-list { display: flex; flex-direction: column; gap: 0; }
+.tier-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tier-row:last-child { border-bottom: none; }
+.tier-pts {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  min-width: 52px;
+  text-align: right;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.tier-label { font-size: 14px; font-weight: 500; color: var(--text); }
+.tier-sub { font-size: 12px; color: var(--muted); margin-top: 2px; font-family: var(--font-mono); }
+
+/* ── RULES ── */
+.rule-item {
+  margin-bottom: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--border2);
+  border-radius: 0 6px 6px 0;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.rule-item.open {
+  border-left-color: var(--accent);
+}
+
+.rule-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s;
+}
+
+.rule-header:hover { background: rgba(255,255,255,0.03); }
+
+.rule-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  min-width: 34px;
+  flex-shrink: 0;
+}
+
+.rule-summary {
+  font-size: 13px;
+  color: rgba(240,239,232,0.75);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.rule-chevron {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+
+.rule-item.open .rule-chevron { transform: rotate(180deg); }
+
+.rule-body {
+  display: none;
+  padding: 0 16px 14px 62px;
+  border-top: 1px solid var(--border);
+}
+
+.rule-item.open .rule-body { display: block; }
+
+.rule-full-text {
+  font-size: 13px;
+  color: rgba(240,239,232,0.85);
+  line-height: 1.75;
+  margin-top: 12px;
+  white-space: pre-wrap;
+}
+
+.rule-full-text p { margin-bottom: 8px; }
+.rule-full-text p:last-child { margin-bottom: 0; }
+
+.rule-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+.rule-text {
+  font-size: 13px;
+  color: rgba(240,239,232,0.8);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+/* ── STAT GRID ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.stat-unit {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 3px;
+}
+
+/* ── HIGHLIGHT ── */
+.highlight-box {
+  background: rgba(232,224,200,0.04);
+  border: 1px solid rgba(232,224,200,0.12);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+/* ── SCROLLBARS ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── TRIAD TABLE ── */
+.triad-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.triad-bar:last-child { border-bottom: none; }
+.triad-n { font-family: var(--font-mono); font-size: 11px; color: var(--muted); min-width: 28px; }
+.triad-track { flex: 1; height: 4px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+.triad-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+.triad-val { font-family: var(--font-mono); font-size: 12px; color: var(--accent); min-width: 48px; text-align: right; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dots">
+      <div class="logo-dot" style="background:var(--red)"></div>
+      <div class="logo-dot" style="background:var(--yellow)"></div>
+      <div class="logo-dot" style="background:var(--green)"></div>
+      <div class="logo-dot" style="background:var(--blue)"></div>
+    </div>
+    PRISMATIC
+  </div>
+  <div class="header-meta">GAME MANUAL v3.1 · VIPER 10554 CADATHON 2026</div>
+</header>
+
+<div class="search-bar">
+  <div class="search-inner">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search rules, scoring, dimensions…">
+    <div id="search-results"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <nav id="nav">
+    <div class="nav-group-label">Overview</div>
+    <button class="nav-btn active" data-section="summary">Game summary</button>
+    <button class="nav-btn" data-section="timeline">Match timeline</button>
+
+    <div class="nav-group-label">Scoring</div>
+    <button class="nav-btn" data-section="spires">Spires</button>
+    <button class="nav-btn" data-section="prismcore">Prism core</button>
+    <button class="nav-btn" data-section="endgame">Endgame / climb</button>
+    <button class="nav-btn" data-section="bonuses">Bonuses</button>
+    <button class="nav-btn" data-section="rp">Ranking points</button>
+
+    <div class="nav-group-label">Field</div>
+    <button class="nav-btn" data-section="field">Field layout</button>
+    <button class="nav-btn" data-section="truss">Ascent truss spec</button>
+    <button class="nav-btn" data-section="pieces">Chromablocks</button>
+
+    <div class="nav-group-label">Rules</div>
+    <button class="nav-btn" data-section="gamerules">Game rules (G##)</button>
+    <button class="nav-btn" data-section="robotrules">Robot rules (R##)</button>
+
+    <div class="nav-group-label">CADathon</div>
+    <button class="nav-btn" data-section="cadathon">Judging criteria</button>
+  </nav>
+
+  <div class="content">
+
+    <!-- SUMMARY -->
+    <div class="section active" id="s-summary">
+      <div class="colour-stripe">
+        <div style="background:var(--red)"></div>
+        <div style="background:var(--yellow)"></div>
+        <div style="background:var(--green)"></div>
+        <div style="background:var(--blue)"></div>
+      </div>
+      <div class="page-title">Game summary</div>
+      <div class="page-sub">PRISMATIC · ASSEMBLE TO THE TOP · v3.1</div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">Alliances</div><div class="stat-value">2<span class="stat-unit">× 3 robots</span></div></div>
+        <div class="stat-card"><div class="stat-label">Match length</div><div class="stat-value">2:30</div></div>
+        <div class="stat-card"><div class="stat-label">Game pieces</div><div class="stat-value">100<span class="stat-unit">blocks</span></div></div>
+        <div class="stat-card"><div class="stat-label">Scoring cap</div><div class="stat-value">None</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Core objective</div>
+        <p>Score 6" foam CHROMaBLOCKS into your alliance's 3 SPIRES and the shared center-field PRISM CORE. Earn colour-pattern bonuses (RAINBOW STATE, PRISM TRIAD). Climb the ASCENT TRUSS in the final 20 seconds.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Three phases</div>
+        <table>
+          <thead><tr><th>Phase</th><th>Duration</th><th>Key notes</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Autonomous</strong></td><td>0:30</td><td>2× block values, LAUNCH bonus (+4 pts), no crossing centerline, no chutes</td></tr>
+            <tr><td><strong>Teleoperated</strong></td><td>1:40</td><td>Driver control, human player chutes open, TRIAD activations allowed</td></tr>
+            <tr><td><strong>Endgame</strong></td><td>0:20</td><td>Climb ASCENT TRUSS, PARK, capture APEX FLAG</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">At 1:00 remaining (simultaneously)</div>
+        <p><strong>MOMENTUM SURGE</strong> — trailing alliance earns +1 pt per placement, cap +15 pts.</p>
+        <p><strong>CENTERLINE REFRESH</strong> — dispenser drops 4 fresh blocks (1 of each colour) within 36" of PRISM CORE.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">CADathon format</div>
+        <p>PRISMATIC is a CADathon: design and document a CAD-complete robot. No physical robot is built. Inspection criteria exist as design targets evaluated by judges for buildability and rules-compliance.</p>
+      </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="section" id="s-timeline">
+      <div class="page-title">Match timeline</div>
+      <div class="page-sub">2:30 TOTAL · ALL TIMES = MATCH-CLOCK REMAINING</div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Clock</th><th>Event</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family:var(--font-mono);white-space:nowrap">2:30 → 2:00</td><td>Autonomous period — 2× block values, no centerline crossing, no chutes, TRIAD activations allowed</td></tr>
+            <tr><td style="font-family:var(--font-mono)">2:00</td><td>Teleop begins — base block values, chutes open</td></tr>
+            <tr><td style="font-family:var(--font-mono)">1:00 ★</td><td><strong>MOMENTUM SURGE</strong> opens for trailing alliance · <strong>CENTERLINE REFRESH</strong> drops 4 blocks</td></tr>
+            <tr><td style="font-family:var(--font-mono)">0:20</td><td>ENDGAME — ascent truss climb opens · no new TRIAD activations · existing multipliers continue</td></tr>
+            <tr><td style="font-family:var(--font-mono)">0:00</td><td>Match clock ends · blocks passing colour sensor in next 5 sec still score</td></tr>
+            <tr><td style="font-family:var(--font-mono)">−0:05</td><td>Scores final (5 sec after 0:00, regardless of field element positions)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SPIRES -->
+    <div class="section" id="s-spires">
+      <div class="page-title">Spires</div>
+      <div class="page-sub">3 PER ALLIANCE · ALLIANCE-CODED · UNLIMITED CYCLING</div>
+
+      <div class="card">
+        <div class="card-title">Scoring values</div>
+        <table>
+          <thead><tr><th>Spire</th><th>Opening ht.</th><th>Capacity</th><th>Teleop</th><th>Auto</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-red">LOW</span></td><td>24"</td><td>4 blocks</td><td>1 pt</td><td>2 pts</td></tr>
+            <tr><td><span class="badge b-yellow">MID</span></td><td>54"</td><td>9 blocks</td><td>3 pts</td><td>6 pts</td></tr>
+            <tr><td><span class="badge b-blue">HIGH</span></td><td>84"</td><td>14 blocks</td><td>7 pts</td><td>12 pts</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Cycling</div>
+        <p>When a spire reaches capacity and a new block is scored, the oldest (bottom) block ejects via the CYCLE PORT and returns to the field floor. No limit on total blocks scored. Points already awarded are not lost.</p>
+        <p style="margin-top:10px"><span class="badge b-yellow">LOW / MID</span>&nbsp; Cycle port ejects home-side (same operational zone as scoring alliance)</p>
+        <p style="margin-top:6px"><span class="badge b-blue">HIGH</span>&nbsp; Cycle port cross-ejects across the centerline into a 24"×24" CONTESTED CHANNEL on the opposing side. Recovery requires crossing the centerline (legal in teleop).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Positions (per alliance)</div>
+        <table>
+          <thead><tr><th>Spire</th><th>Distance from alliance wall</th><th>Width position</th></tr></thead>
+          <tbody>
+            <tr><td>All spires</td><td>13.5' (midway to centerline)</td><td>—</td></tr>
+            <tr><td>Low</td><td>—</td><td>5' from south guardrail</td></tr>
+            <tr><td>Mid</td><td>—</td><td>13.5' (centered)</td></tr>
+            <tr><td>High</td><td>—</td><td>22' from south guardrail</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Physical specs</div>
+        <p>Footprint: 12"×12" outer, 8"×8" inner stack chamber (1" clearance around a 6" block). Clear polycarbonate skin. Opening on alliance-wall-facing side. 80/20 aluminium framing.</p>
+      </div>
+    </div>
+
+    <!-- PRISM CORE -->
+    <div class="section" id="s-prismcore">
+      <div class="page-title">Prism core</div>
+      <div class="page-sub">SHARED CENTER-FIELD · HEXAGONAL · 6 SLOT FACES · DEPTH-SCORED</div>
+
+      <div class="card">
+        <div class="card-title">Scoring by position (teleop / auto)</div>
+        <table>
+          <thead><tr><th>Position</th><th>Teleop</th><th>Auto</th><th>Teleop congested</th><th>Auto congested</th></tr></thead>
+          <tbody>
+            <tr><td>1 — bottom</td><td>3 pts</td><td>6 pts</td><td>3 pts</td><td>6 pts</td></tr>
+            <tr><td>2</td><td>4 pts</td><td>8 pts</td><td>3 pts</td><td>6 pts</td></tr>
+            <tr><td>3</td><td>5 pts</td><td>10 pts</td><td>4 pts</td><td>8 pts</td></tr>
+            <tr><td>4 — top / cycling</td><td><strong>6 pts</strong></td><td><strong>12 pts</strong></td><td>5 pts</td><td>10 pts</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px;font-size:12px;color:var(--muted)">Once a face has 4 blocks and starts cycling, every new block enters at position 4.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Congestion penalty</div>
+        <p>Triggered when 2 or more <em>opposing</em> robots have any bumper portion inside the 60" PRISM CORE ZONE at moment of insert. Scores at the next-lower position tier (position 1 is floor, unaffected). Allied robots do not contribute.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Full face bonus</div>
+        <p>First time each slot face fills to 4 blocks: +5 pts to the alliance holding 3+ of the 4 blocks. A 2-2 split = CONTESTED, no bonus. One award per face per match. Alliance ceiling: <strong>+30 pts</strong>. Not multiplied by TRIAD.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">PRISM TRIAD multiplier curve</div>
+        <p style="margin-bottom:12px">Arm a TRIAD by scoring same colour into 3+ different slot faces. Activate at driver station. Multiplies all base placement scoring for 15 seconds. Max 8 activations per alliance per match (2 per colour, 45-sec same-colour cooldown).</p>
+        <div>
+          <div class="triad-bar"><div class="triad-n">1st</div><div class="triad-track"><div class="triad-fill" style="width:100%"></div></div><div class="triad-val">1.300×</div></div>
+          <div class="triad-bar"><div class="triad-n">2nd</div><div class="triad-track"><div class="triad-fill" style="width:91.4%"></div></div><div class="triad-val">1.275×</div></div>
+          <div class="triad-bar"><div class="triad-n">3rd</div><div class="triad-track"><div class="triad-fill" style="width:82.9%"></div></div><div class="triad-val">1.250×</div></div>
+          <div class="triad-bar"><div class="triad-n">4th</div><div class="triad-track"><div class="triad-fill" style="width:74.3%"></div></div><div class="triad-val">1.225×</div></div>
+          <div class="triad-bar"><div class="triad-n">5th</div><div class="triad-track"><div class="triad-fill" style="width:65.7%"></div></div><div class="triad-val">1.200×</div></div>
+          <div class="triad-bar"><div class="triad-n">6th</div><div class="triad-track"><div class="triad-fill" style="width:57.1%"></div></div><div class="triad-val">1.175×</div></div>
+          <div class="triad-bar"><div class="triad-n">7th</div><div class="triad-track"><div class="triad-fill" style="width:48.6%"></div></div><div class="triad-val">1.150×</div></div>
+          <div class="triad-bar"><div class="triad-n">8th</div><div class="triad-track"><div class="triad-fill" style="width:40%"></div></div><div class="triad-val">1.125× ★</div></div>
+        </div>
+        <p style="margin-top:10px;font-size:12px;color:var(--muted)">★ Floor. Does NOT multiply: rainbows, chroma sweep, full face bonus, teamlift, endgame, or momentum surge.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Physical specs</div>
+        <p>28" flat-to-flat hexagonal column. 6 slot faces, each 8" wide × 24" tall, bottom at 12" off carpet, top at 36". Holds 4 stacked blocks per face (8"×8" chamber). Cycles via SERVICE CHUTE when full.</p>
+      </div>
+    </div>
+
+    <!-- ENDGAME -->
+    <div class="section" id="s-endgame">
+      <div class="page-title">Endgame / climb</div>
+      <div class="page-sub">FINAL 20 SECONDS · ASCENT TRUSS ALONG CENTERLINE</div>
+
+      <div class="card">
+        <div class="card-title">Climb tiers</div>
+        <div class="tier-list">
+          <div class="tier-row">
+            <div style="flex:1"><div class="tier-label">Park</div><div class="tier-sub">On carpet, in ascent zone</div></div>
+            <div class="tier-pts">5</div>
+          </div>
+          <div class="tier-row">
+            <div style="flex:1"><div class="tier-label">Shallow ascent</div><div class="tier-sub">Lowest point ≥ 24" · grips lower rail</div></div>
+            <div class="tier-pts">14</div>
+          </div>
+          <div class="tier-row">
+            <div style="flex:1"><div class="tier-label">Deep ascent</div><div class="tier-sub">Lowest point ≥ 48" · grips lower rail</div></div>
+            <div class="tier-pts">22</div>
+          </div>
+          <div class="tier-row">
+            <div style="flex:1"><div class="tier-label">Apex ascent</div><div class="tier-sub">Lowest point ≥ 78" · grips main rail at 96"</div></div>
+            <div class="tier-pts">28</div>
+          </div>
+          <div class="tier-row">
+            <div style="flex:1"><div class="tier-label">Apex + flag</div><div class="tier-sub">≥ 78" + APEX FLAG captured</div></div>
+            <div class="tier-pts">40</div>
+          </div>
+          <div class="tier-row">
+            <div style="flex:1"><div class="tier-label">Teamlift bonus</div><div class="tier-sub">All 3 robots at shallow or higher — alliance flat bonus</div></div>
+            <div class="tier-pts">+20</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box">Maximum alliance endgame: 3 × 40 (apex+flag) + 20 (teamlift) = <strong>140 pts</strong></div>
+
+      <div class="card">
+        <div class="card-title">Apex flag rules</div>
+        <p>3 flags per alliance, colour-coded. Velcro-attached to main rail underside at 96" ±0.5". Releases at 5 lb ±0.5 lb pull. Can be grabbed at any point during endgame — but scores as APEX+FLAG only if robot is at ≥78" when scores are final. Robot that grabs flag but only achieves deep ascent scores 22 pts, not 40. Dislodged teammate flag forfeits that flag's bonus unless re-attached before scores final.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Teamlift</div>
+        <p>All 3 alliance robots must have lowest point ≥ 24" at scores final. PARK does not count. Mixed tiers qualify (e.g. apex+flag + deep + shallow all satisfy teamlift). Flat bonus — not multiplied by TRIAD.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Rail heights</div>
+        <table>
+          <thead><tr><th>Rail</th><th>Height</th><th>Tolerance</th><th>Used for</th></tr></thead>
+          <tbody>
+            <tr><td>Main rail</td><td>96"</td><td>±0.25"</td><td>Apex ascent + flag</td></tr>
+            <tr><td>Lower rail</td><td>60"</td><td>±0.25"</td><td>Shallow + deep ascent</td></tr>
+            <tr><td>Lower rail offset (south)</td><td>12"</td><td>±0.5"</td><td>Clearance between rails</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BONUSES -->
+    <div class="section" id="s-bonuses">
+      <div class="page-title">Bonuses</div>
+      <div class="page-sub">ALL BONUSES EXCEPT TRIAD ARE FLAT — NOT MULTIPLIED</div>
+
+      <div class="card">
+        <div class="card-title">Rainbow bonus</div>
+        <table>
+          <thead><tr><th>Spire</th><th>Bonus</th><th>Max per match</th><th>Renewable?</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-red">Low</span></td><td>10 pts</td><td>2×</td><td>Yes — cycles can remove duplicates, re-entry earns again</td></tr>
+            <tr><td><span class="badge b-yellow">Mid</span></td><td>15 pts</td><td>1×</td><td>No</td></tr>
+            <tr><td><span class="badge b-blue">High</span></td><td>20 pts</td><td>1×</td><td>No</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px">Awarded when a spire's displayed stack contains ≥1 block of every colour. Awarded to the alliance that scored the completing block.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Chroma sweep</div>
+        <p>+20 pts one-time bonus when an alliance earns their first rainbow in all three spires (Low + Mid + High) in a single match, awarded at the moment the third distinct spire's first rainbow is completed.</p>
+        <p style="margin-top:8px">Maximum rainbow + sweep total per alliance: <strong>75 pts</strong> (Low 20 + Mid 15 + High 20 + Sweep 20).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Momentum surge</div>
+        <p>At 1:00 remaining: trailing alliance earns +1 pt per block placement (spire or core). Cap: +15 pts total. Determined once at 1:00 — does not toggle if lead changes. Tied score at 1:00 = no surge. Not multiplied by TRIAD.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Full face bonus</div>
+        <p>See Prism core section. +5 pts per slot face filled 3+ blocks from one alliance. Alliance ceiling +30 pts. Not multiplied by TRIAD.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">PRISM TRIAD multiplier</div>
+        <p>See Prism core section. Multiplies base placement scoring (spires + core inserts) only. First activation 1.300×, diminishes by 0.025× each use, floor 1.125× at 8th. Max 8 activations per alliance per match.</p>
+      </div>
+    </div>
+
+    <!-- RP -->
+    <div class="section" id="s-rp">
+      <div class="page-title">Ranking points</div>
+      <div class="page-sub">QUALIFICATION MATCHES ONLY · MAX 7 RP PER MATCH</div>
+
+      <div class="card">
+        <table>
+          <thead><tr><th>Code</th><th>Name</th><th>Condition</th><th>RP</th></tr></thead>
+          <tbody>
+            <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">RP-W</span></td><td>Win</td><td>Winning alliance</td><td><strong>+3</strong></td></tr>
+            <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">RP-T</span></td><td>Tie</td><td>Both alliances on a tie</td><td><strong>+1</strong></td></tr>
+            <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">RP-A</span></td><td>Architect</td><td>≥130 pts from block placements (no endgame / bonuses)</td><td><strong>+1</strong></td></tr>
+            <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">RP-C</span></td><td>Chromatic</td><td>Rainbow bonus in each of Low + Mid + High spire</td><td><strong>+1</strong></td></tr>
+            <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">RP-S</span></td><td>Summit</td><td>Combined endgame points (incl. teamlift) ≥ 110</td><td><strong>+1</strong></td></tr>
+            <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">RP-M</span></td><td>Momentum</td><td>Trailing by ≥20 pts at 1:00 AND final margin ≤30 pts (either win or lose)</td><td><strong>+1</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Seeding tiebreakers (in order)</div>
+        <table>
+          <thead><tr><th>#</th><th>Criterion</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>Highest cumulative ranking points</td></tr>
+            <tr><td>B</td><td>Highest cumulative endgame points across all qualification matches</td></tr>
+            <tr><td>C</td><td>Most rainbow bonuses earned</td></tr>
+            <tr><td>D</td><td>Highest single-match score</td></tr>
+            <tr><td>E</td><td>Most blocks scored across all matches</td></tr>
+            <tr><td>F</td><td>Coin flip by head referee in presence of both alliance captains</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Playoff tiebreaker</div>
+        <p>Tied playoff matches resolved with a 1-minute overtime period using teleoperated-only scoring (no autonomous, no endgame). If still tied, higher seed wins.</p>
+      </div>
+    </div>
+
+    <!-- FIELD -->
+    <div class="section" id="s-field">
+      <div class="page-title">Field layout</div>
+      <div class="page-sub">27' × 54' CARPETED · FIRST-STANDARD GREY CARPET</div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">Field width</div><div class="stat-value">27<span class="stat-unit">ft</span></div></div>
+        <div class="stat-card"><div class="stat-label">Field length</div><div class="stat-value">54<span class="stat-unit">ft</span></div></div>
+        <div class="stat-card"><div class="stat-label">Total blocks</div><div class="stat-value">100</div></div>
+        <div class="stat-card"><div class="stat-label">Spires / alliance</div><div class="stat-value">3</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Zones</div>
+        <table>
+          <thead><tr><th>Zone</th><th>Size / location</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td>Alliance starting zone</td><td>3' deep strip at alliance wall</td><td>Robots must start here · always protected from opposing contact</td></tr>
+            <tr><td>Operational zone</td><td>Each alliance's half (side of centerline)</td><td>Defense legal in teleop · no crossing in autonomous</td></tr>
+            <tr><td>Ascent zone</td><td>6' strip spanning centerline between truss uprights</td><td>Protected during endgame · no opposing contact</td></tr>
+            <tr><td>Prism core zone</td><td>60" across-flats hex centred on core</td><td>2+ opposing robots triggers congestion penalty</td></tr>
+            <tr><td>Contested channel</td><td>24"×24" white tape squares, one per high spire per alliance</td><td>Landing zone for high spire cross-ejected blocks</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Chromachute positions</div>
+        <p>2 per alliance, outside south guardrail at ~7' and ~18' from the alliance wall. Max 1 block per chute per 2 seconds. Max 1 block per second per alliance across both chutes combined. Human players draw from the 20-block ALLIANCE BUFFER behind the wall.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Block pre-positioning</div>
+        <table>
+          <thead><tr><th>Location</th><th>Count</th><th>Composition</th></tr></thead>
+          <tbody>
+            <tr><td>Centerline</td><td>12</td><td>RYGB repeating from south guardrail</td></tr>
+            <tr><td>Alliance cache (per alliance)</td><td>6</td><td>1R + 1Y + 1G + 1B + 2 alliance-colour</td></tr>
+            <tr><td>Alliance buffer (per alliance)</td><td>20</td><td>5 of each colour</td></tr>
+            <tr><td>Reserve</td><td>36</td><td>9 of each colour, added to buffers as needed</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>100</strong></td><td>25 per colour</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TRUSS -->
+    <div class="section" id="s-truss">
+      <div class="page-title">Ascent truss spec</div>
+      <div class="page-sub">AUTHORITATIVE DIMENSIONS FOR CAD CLIMBER DESIGN</div>
+
+      <div class="card">
+        <div class="card-title">Rail heights</div>
+        <table>
+          <thead><tr><th>Rail</th><th>Height</th><th>Tolerance</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Main rail</td><td><strong>96"</strong></td><td>±0.25"</td><td>Apex ascent + flag</td></tr>
+            <tr><td>Lower rail</td><td><strong>60"</strong></td><td>±0.25"</td><td>Shallow + deep ascent</td></tr>
+            <tr><td>Lower rail offset (south of main)</td><td>12"</td><td>±0.5"</td><td>Separation between rails</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Climb face (U-channel) — critical CAD dimensions</div>
+        <table>
+          <thead><tr><th>Dimension</th><th>Value</th><th>Tolerance</th></tr></thead>
+          <tbody>
+            <tr><td>Outer width</td><td>2"</td><td>±0.05"</td></tr>
+            <tr><td>Outer depth</td><td>3"</td><td>±0.05"</td></tr>
+            <tr><td><strong>Inner usable width ★</strong></td><td><strong>1.75"</strong></td><td>±0.05"</td></tr>
+            <tr><td><strong>Inner usable depth ★</strong></td><td><strong>2.75"</strong></td><td>±0.05"</td></tr>
+            <tr><td>Length</td><td>24"</td><td>±0.125"</td></tr>
+            <tr><td>Count per rail</td><td>6</td><td>—</td></tr>
+            <tr><td>Inter-face gap (nominal)</td><td>~32"</td><td>variable</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px;font-size:12px;color:var(--muted)">★ Design hook/engagement features to fit the 1.75"×2.75" inner opening with appropriate clearance. Material: 6063-T5 aluminium U-channel, opening facing down, deburred edges.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Allowable vs forbidden contact</div>
+        <p><span class="badge b-green">Allowed</span>&nbsp; Inner top face of U-channel &nbsp;·&nbsp; Two inner side walls of U-channel</p>
+        <p style="margin-top:8px"><span class="badge b-red">Forbidden</span>&nbsp; U-channel exterior &nbsp;·&nbsp; Rail body &nbsp;·&nbsp; Mounting hardware &nbsp;·&nbsp; Uprights &nbsp;·&nbsp; Diagonal members &nbsp;·&nbsp; Top truss members</p>
+        <p style="margin-top:8px">Contact with any forbidden surface during endgame forfeits ASCENT scoring for that robot (G18).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Apex flags</div>
+        <p>8"×12" canvas pennants, alliance-coloured. Velcro-attached to main rail underside at 96" ±0.5". Release under 5 lb ±0.5 lb pull. 3 per alliance (6 total).</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Materials</div>
+        <table>
+          <thead><tr><th>Element</th><th>Material</th></tr></thead>
+          <tbody>
+            <tr><td>Main rail / lower rail</td><td>6061-T6 aluminium box-truss (3"×1.5" chords + 1"×1" diagonals)</td></tr>
+            <tr><td>Uprights</td><td>3"×3" T-slot framing</td></tr>
+            <tr><td>Climb face</td><td>6063-T5 aluminium U-channel</td></tr>
+            <tr><td>Mounting hardware</td><td>1/4-20 stainless bolts on 6" centres</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PIECES -->
+    <div class="section" id="s-pieces">
+      <div class="page-title">Chromablocks</div>
+      <div class="page-sub">THE ONLY GAME PIECE IN PRISMATIC</div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">Size</div><div class="stat-value">6"<span class="stat-unit">cube</span></div></div>
+        <div class="stat-card"><div class="stat-label">Weight</div><div class="stat-value">4<span class="stat-unit">oz</span></div></div>
+        <div class="stat-card"><div class="stat-label">Colours</div><div class="stat-value">4</div></div>
+        <div class="stat-card"><div class="stat-label">Total quantity</div><div class="stat-value">100</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Specifications</div>
+        <table>
+          <thead><tr><th>Property</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Shape</td><td>6.0" cube, ±0.125" per axis</td></tr>
+            <tr><td>Material</td><td>High-density EVA closed-cell foam</td></tr>
+            <tr><td>Colour method</td><td>Dyed throughout (not surface-painted) — colour preserved under scuffing</td></tr>
+            <tr><td>Deformation</td><td>Up to ~10% under sustained robot grip, no permanent damage</td></tr>
+            <tr><td>Ownership</td><td>Neutral — either alliance may score any colour anywhere</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Colour quantities</div>
+        <table>
+          <thead><tr><th>Colour</th><th>Hex (approx)</th><th>Quantity</th><th>Total mass</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-red">Red</span></td><td style="font-family:var(--font-mono);font-size:11px">#AA1818</td><td>25</td><td>~6.25 lb</td></tr>
+            <tr><td><span class="badge b-yellow">Yellow</span></td><td style="font-family:var(--font-mono);font-size:11px">#CC8800</td><td>25</td><td>~6.25 lb</td></tr>
+            <tr><td><span class="badge b-green">Green</span></td><td style="font-family:var(--font-mono);font-size:11px">#118844</td><td>25</td><td>~6.25 lb</td></tr>
+            <tr><td><span class="badge b-blue">Blue</span></td><td style="font-family:var(--font-mono);font-size:11px">#1F57CC</td><td>25</td><td>~6.25 lb</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Key rules</div>
+        <p>Possession limit: max 3 blocks at one time per robot (G15) — FOUL per excess block per second. Blocks may only enter the field via CHROMACHUTE (G16). Robots may not use blocks as traction aids, components, or climbing aids (G17) — DQ.</p>
+      </div>
+    </div>
+
+    <!-- GAME RULES -->
+    <div class="section" id="s-gamerules">
+      <div class="page-title">Game rules</div>
+      <div class="page-sub">G01–G24 · ABBREVIATED · SEE FULL MANUAL FOR COMPLETE TEXT</div>
+      <div id="rules-list"></div>
+    </div>
+
+    <!-- ROBOT RULES -->
+    <div class="section" id="s-robotrules">
+      <div class="page-title">Robot rules</div>
+      <div class="page-sub">R01–R20 · CONSTRUCTION AND INSPECTION</div>
+      <div id="robot-rules-list"></div>
+    </div>
+
+    <!-- CADATHON -->
+    <div class="section" id="s-cadathon">
+      <div class="page-title">CADathon judging</div>
+      <div class="page-sub">DESIGN PACKAGE SUBMISSION + JUDGING CRITERIA</div>
+
+      <div class="card">
+        <div class="card-title">Design package (required for ranking)</div>
+        <p><strong>OnShape CAD model</strong> — complete robot assembly: drivetrain, scoring mechanisms, climbing mechanism, electrical layout, alliance-coloured bumpers, presented in starting configuration (R02). Must be shareable via OnShape link with the judging panel.</p>
+        <p style="margin-top:8px"><strong>Google Doc design document</strong> — "virtual tech binder" describing the robot, mechanism choices, and strategic intent behind the design.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Judging criteria</div>
+        <table>
+          <thead><tr><th>Criterion</th><th>What judges look for</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Mechanism performance</strong></td><td>ReCalc (or equivalent) validation of motor selection, gear ratios, expected speeds, torques, force margins. CAD claims that fail a ReCalc check are weighted accordingly.</td></tr>
+            <tr><td><strong>Design elegance</strong></td><td>Clarity, simplicity, and intentionality of the mechanical and electrical design.</td></tr>
+            <tr><td><strong>Robustness</strong></td><td>Tolerance to manufacturing variation, foreseeable wear, defensive contact loads, edge-case match scenarios.</td></tr>
+            <tr><td><strong>Feasibility</strong></td><td>Buildability with typical FRC resources, realism of assembly procedure, alignment with Section 8.2 inspection criteria.</td></tr>
+            <tr><td><strong>Design strategy</strong></td><td>Explicit articulation of calculated tradeoffs and how the PRISMATIC scoring environment shaped the robot's architecture.</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:10px;font-size:12px;color:var(--muted)">Criteria evaluated holistically. Relative weighting at head judge's discretion, published alongside event results.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Inspection checklist (17 items)</div>
+        <table>
+          <thead><tr><th>#</th><th>Item</th><th>Rule</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Frame perimeter ≤ 120"</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R01</td></tr>
+            <tr><td>2</td><td>Starting config: fits frame perimeter, ≤ 42" tall</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R02</td></tr>
+            <tr><td>3</td><td>Weight ≤ 125 lb (no battery/bumpers)</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R03</td></tr>
+            <tr><td>4</td><td>Bumpers compliant with FRC 2026 spec</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R04</td></tr>
+            <tr><td>5</td><td>No carpet-damaging drivetrain features</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R05</td></tr>
+            <tr><td>6</td><td>Electrical / pneumatic FRC 2026 compliance</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R06</td></tr>
+            <tr><td>7</td><td>FIRST Systemcore or RoboRIO 2 (no RoboRIO 1)</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R07</td></tr>
+            <tr><td>8</td><td>No entanglement features</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R08</td></tr>
+            <tr><td>9</td><td>Extension behaviour reviewed (R09 compliance)</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R09</td></tr>
+            <tr><td>10</td><td>All motors are FRC 2026-legal</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R12</td></tr>
+            <tr><td>11</td><td>Pneumatic pressure ≤ 120 psi at storage</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R13</td></tr>
+            <tr><td>12</td><td>Approved 12V SLA battery (no LiFePO4)</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R14</td></tr>
+            <tr><td>13</td><td>Team number on ≥2 sides at ≥4"</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R15</td></tr>
+            <tr><td>14</td><td>No prohibited energy storage / launchers</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R16</td></tr>
+            <tr><td>15</td><td>Structural integrity (no sharp edges in contact zones)</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R17</td></tr>
+            <tr><td>16</td><td>E-stop functional within 1 second</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R18</td></tr>
+            <tr><td>17</td><td>No unauthorised wireless transmitters</td><td style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">R19</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const gameRules = [
+  {
+    code:"G01", summary:"Start in starting config, in alliance starting zone, on carpet.",
+    full:`When placed on the FIELD at the start of a match, each ROBOT must be:\n\nA) Confined to its STARTING CONFIGURATION (R02)\nB) Positioned fully within their ALLIANCE's ALLIANCE STARTING ZONE\nC) Fully supported by the carpet of the FIELD\n\nViolation: Match restarted only if pre-match; FOUL if discovered post-start.`,
+    penalty:"FOUL"
+  },
+  {
+    code:"G02", summary:"No strategies aimed at forcing a foul on the opposing alliance.",
+    full:`Strategies aimed at forcing a FOUL or TECHNICAL FOUL on the opposing ALLIANCE are not permitted.\n\nViolation: TECHNICAL FOUL; the would-be FOUL is not called.`,
+    penalty:"TECH FOUL"
+  },
+  {
+    code:"G03", summary:"Scores are final 5 seconds after the match clock reaches 0:00.",
+    full:`Scores are considered final exactly 5 seconds after the match clock reaches 0:00, regardless of whether all field elements have come to a complete stop.\n\nBlocks that pass the colour sensor of a scoring location during the 5-second post-match window count toward the final score. Blocks still in motion when scores are final are evaluated at their state at the moment of finalisation; blocks that have not passed a colour sensor by then do not score.`,
+    penalty:"—"
+  },
+  {
+    code:"G04", summary:"No crossing the centerline or contacting opponents during AUTONOMOUS.",
+    full:`ROBOTS may not contact any opposing ROBOT or any portion of the FIELD beyond their side of the CENTERLINE during the AUTONOMOUS PERIOD.\n\nViolation: TECHNICAL FOUL for the off-side ROBOT; DQ if strategic.`,
+    penalty:"TECH FOUL / DQ"
+  },
+  {
+    code:"G05", summary:"No extending outside your frame to contact inside an opponent's frame.",
+    full:`ROBOTS may not use any extension outside of their FRAME PERIMETER to contact an opposing ROBOT inside that opponent's FRAME PERIMETER as part of normal play.\n\nViolation: TECHNICAL FOUL for the initiator.`,
+    penalty:"TECH FOUL"
+  },
+  {
+    code:"G06", summary:"No intentionally detaching or leaving parts on the field.",
+    full:`ROBOTS may not intentionally detach or leave parts on the FIELD.\n\nViolation: TECHNICAL FOUL; DQ if match-affecting.`,
+    penalty:"TECH FOUL / DQ"
+  },
+  {
+    code:"G07", summary:"No extending out of the field boundaries.",
+    full:`ROBOTS may not extend out of the FIELD. Brief, incidental incursions will not be penalized.\n\nViolation: FOUL; TECHNICAL FOUL if contact is made with a person or property outside of the FIELD.`,
+    penalty:"FOUL / TECH FOUL"
+  },
+  {
+    code:"G08", summary:"Horizontal extension limit: ≤18\" beyond frame perimeter in any direction.",
+    full:`A ROBOT's horizontal dimensions may never exceed 18" (45.7 cm) beyond its FRAME PERIMETER in any direction.\n\nViolation: FOUL per instance.`,
+    penalty:"FOUL per instance"
+  },
+  {
+    code:"G09", summary:"No intentionally tipping or falling over.",
+    full:`ROBOTS may not intentionally fall over or attempt to fall over.\n\nViolation: FOUL; TECHNICAL FOUL if used to score or as defense.`,
+    penalty:"FOUL / TECH FOUL"
+  },
+  {
+    code:"G10", summary:"Do not deliberately attempt to damage robots or field elements.",
+    full:`Do not deliberately attempt to damage other ROBOTS or FIELD elements.\n\nViolation: DQ.`,
+    penalty:"DQ"
+  },
+  {
+    code:"G11", summary:"Pin duration limit: 8 seconds maximum.",
+    full:`A pin may not last longer than 8 seconds.\n\nDefinition: A pin requires a ROBOT on one ALLIANCE to sandwich a ROBOT of the other ALLIANCE between itself and another object on the FIELD (a wall, structure, or third ROBOT).\n\nViolation: TECHNICAL FOUL.`,
+    penalty:"TECH FOUL"
+  },
+  {
+    code:"G12", summary:"No deliberately freezing gameplay.",
+    full:`An ALLIANCE may not deliberately freeze gameplay. Specifically prohibited:\n\nA) Holding a pinned ROBOT past the 8 second G11 limit.\nB) Parking a ROBOT in a CHROMACHUTE delivery path so introduced blocks cannot enter the FIELD.\nC) Refusing to release CHROMABLOCKS held in possession when a match-end situation requires them in play.\n\nNOT prohibited: legal defence in the OPERATIONAL ZONE (see G14), holding the centre of the FIELD to deny scoring positions, or carrying blocks at the possession limit (G15).\n\nViolation: TECHNICAL FOUL; DQ if strategic.`,
+    penalty:"TECH FOUL / DQ"
+  },
+  {
+    code:"G13", summary:"Human players may not extend into the field.",
+    full:`HUMAN PLAYERS may not extend any portion of their body into the FIELD. Accidental incursions will be met with a warning.\n\nViolation: FOUL; TECHNICAL FOUL if repeated.`,
+    penalty:"FOUL / TECH FOUL"
+  },
+  {
+    code:"G14", summary:"No contact in protected zones (alliance starting zone always; ascent zone in endgame).",
+    full:`Regardless of who initiates contact, ROBOTS may not contact an opposing ROBOT when that opposing ROBOT is at least partially within their ALLIANCE STARTING ZONE, or within the ASCENT ZONE during the ENDGAME.\n\nDefensive contact (blocking, pushing, body-checks) IS legal in the opposing ALLIANCE's OPERATIONAL ZONE during TELEOP, subject to G05, G08, G09, G10, and G11.\n\nFor ASCENT-ZONE contact during ENDGAME: each contact is a TECHNICAL FOUL (15 pts) to the ALLIANCE that initiated it, regardless of whether the contacted ROBOT was actively engaged in ASCENT or merely PARKed/transiting. The contacted ROBOT scores its actual achieved ENDGAME tier at scores final — there is no automatic ASCENT credit awarded as a result of being contacted.\n\nViolation: See per-clause penalties above; DQ if strategic.`,
+    penalty:"TECH FOUL per contact / DQ"
+  },
+  {
+    code:"G15", summary:"Possession limit: max 3 CHROMaBLOCKS at one time.",
+    full:`A ROBOT may possess at most 3 CHROMABLOCKS at one time. Each additional block in possession beyond 3 is a violation, assessed each second the violation persists.\n\nViolation: FOUL per excess block per second.`,
+    penalty:"FOUL per excess block per second"
+  },
+  {
+    code:"G16", summary:"CHROMaBLOCKS may only enter the field via a CHROMACHUTE.",
+    full:`CHROMABLOCKS may only be introduced into the FIELD via a CHROMACHUTE. ROBOTS may not be hand-loaded by HUMAN PLAYERS reaching into the FIELD.\n\nViolation: TECHNICAL FOUL.`,
+    penalty:"TECH FOUL"
+  },
+  {
+    code:"G17", summary:"No using blocks as traction aids, components, or climbing aids.",
+    full:`ROBOTS may not use CHROMABLOCKS as components, traction aids, climbing aids, or to amplify any other action beyond what the manual contemplates (e.g. wedging blocks under wheels for traction, building a stack of blocks under the ROBOT to climb).\n\nViolation: DQ.`,
+    penalty:"DQ"
+  },
+  {
+    code:"G18", summary:"Truss contact only at climb faces (U-channels) during endgame.",
+    full:`During ENDGAME, ROBOTS may only contact the ASCENT TRUSS at a CLIMB FACE (one of the twelve 24" U-channels on the MAIN RAIL or LOWER RAIL). Contact with any other portion of the truss (uprights, top members, side trusses) forfeits ENDGAME scoring for that ROBOT.\n\nAllowable contact surfaces: the inner top face and the two inner side walls of the U-channel only. The U-channel exterior, rail body, mounting hardware, uprights, top truss members, and diagonal members are all FORBIDDEN CONTACT SURFACES.\n\nViolation: No ENDGAME scoring for the ROBOT; FOUL per contact for repeated/strategic contact.`,
+    penalty:"No endgame scoring / FOUL"
+  },
+  {
+    code:"G19", summary:"No LAUNCHING — must release block within 6\" of the scoring face plane.",
+    full:`A CHROMABLOCK is LAUNCHED if it is released by a ROBOT more than 6" (one block edge) horizontally from the receiving SCORING FACE plane. The SCORING FACE plane is the vertical plane defined by the SPIRE OPENING for SPIRES, or by the relevant SLOT FACE for the PRISM CORE.\n\nPRISMATIC is a placement game. ROBOTS must deliver blocks to within 6" of the receiving SCORING FACE before releasing. Velocity is not a factor; only the release distance is measured. Refs use the OPENING / SLOT FACE edge as the reference plane.\n\nViolation: 2 TECHNICAL FOULS per LAUNCH; the LAUNCHED block does not score; if a LAUNCHED block contacts an opposing ROBOT, an additional FOUL is assessed.`,
+    penalty:"2× TECH FOUL + no score"
+  },
+  {
+    code:"G20", summary:"Human players must make best effort to keep alliance buffer stocked.",
+    full:`HUMAN PLAYERS shall make a best-effort attempt to keep their ALLIANCE BUFFER stocked with a mix of all four colours during the match by adding reserve blocks as the BUFFER depletes. Routine running-out of a colour is not penalised. Strategic withholding (deliberately leaving the BUFFER empty to deny the opposing ALLIANCE) IS prohibited.\n\nViolation: No penalty for routine depletion. TECHNICAL FOUL only for clearly strategic withholding.`,
+    penalty:"TECH FOUL (strategic only)"
+  },
+  {
+    code:"G21", summary:"CHROMACHUTE introduction cadence: max 1 block per 2 seconds per chute.",
+    full:`HUMAN PLAYERS may introduce blocks via a single CHROMACHUTE at no faster than one block per 2 seconds per chute.\n\nViolation: FOUL per excess block.`,
+    penalty:"FOUL per excess block"
+  },
+  {
+    code:"G22", summary:"No displacing the prism core or contacting the TRIAD BEACON.",
+    full:`ROBOTS may not contact the PRISM CORE in a way that displaces it from its anchored position, nor may they intentionally contact the TRIAD BEACON.\n\nViolation: FOUL per contact; TECHNICAL FOUL if displacement is sustained.`,
+    penalty:"FOUL / TECH FOUL"
+  },
+  {
+    code:"G23", summary:"Height above 96\" only allowed in the ascent zone during endgame.",
+    full:`During ENDGAME, ROBOTS may extend above the 96" R09 height limit only when fully within the ASCENT ZONE (up to the 108" ENDGAME ceiling).\n\nViolation: FOUL per second of out-of-zone extension above 96".`,
+    penalty:"FOUL per second"
+  },
+  {
+    code:"G24", summary:"Gracious Professionalism — no disrespect, harassment, or unsporting conduct.",
+    full:`All teams, drivers, coaches, and HUMAN PLAYERS are expected to embody Gracious Professionalism. Deliberate disrespect, harassment, or unsporting conduct will result in penalties up to and including ALLIANCE-wide DQ.\n\nViolation: FOUL through DQ at the discretion of the head referee.`,
+    penalty:"FOUL through DQ"
+  }
+];
+
+const robotRules = [
+  {
+    code:"R01", summary:"Frame perimeter (convex hull of fixed parts in starting config) ≤ 120\".",
+    full:`A ROBOT's FRAME PERIMETER (the convex hull of all fixed parts of the ROBOT in its STARTING CONFIGURATION) shall not exceed 120" in length, measured around its perimeter.\n\nViolation: Inspection failure; FOUL per match if discovered post-start.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R02", summary:"Starting config: fits within frame perimeter, ≤ 42\" tall, all extensions stowed.",
+    full:`In its STARTING CONFIGURATION, the ROBOT must:\n\nA) Fit entirely within its FRAME PERIMETER\nB) Be no taller than 42" measured from the carpet\nC) Have all extensions stowed within the FRAME PERIMETER\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R03", summary:"Robot weight (excluding battery and bumpers) ≤ 125 lb.",
+    full:`The ROBOT weight (excluding battery and bumpers) may not exceed 125 lb (56.7 kg).\n\nViolation: Inspection failure; weight reduced or ROBOT removed from match.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R04", summary:"Bumpers must comply with FRC 2026 spec; alliance-coloured bumpers required.",
+    full:`Bumpers must comply with FRC 2026 bumper rules. ALLIANCE-coloured bumpers (RED or BLUE) are required and must be paired correctly to the ALLIANCE assignment for each match.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R05", summary:"No cleats, spikes, or sharp protrusions designed to penetrate carpet.",
+    full:`No cleats, spikes, or sharp protrusions designed to penetrate the carpet for traction.\n\nViolation: Inspection failure; DQ if discovered during a match.`,
+    penalty:"Inspection fail / DQ"
+  },
+  {
+    code:"R06", summary:"FRC 2026 electrical, motor, and pneumatic rules apply in full.",
+    full:`FRC 2026 electrical, motor, and pneumatic rules apply in full. Refer to the official FRC manual for specifics on allowed motors, controllers, batteries, and pneumatic components.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R07", summary:"Must use FIRST Systemcore or RoboRIO 2. RoboRIO 1 not permitted.",
+    full:`ROBOTS must use either the FIRST Systemcore control system or a RoboRIO 2. RoboRIO 1 is not permitted at PRISMATIC events. The radio shall be the FRC-legal radio specified for the chosen control system.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R08", summary:"No entanglement features designed to snag or interfere with other robots.",
+    full:`ROBOTS may not have any features designed to entangle, snag, or interfere with the operation of other ROBOTS (e.g. nets, sticky surfaces, hooks designed to grab opponents).\n\nViolation: Inspection failure; DQ if discovered during a match.`,
+    penalty:"Inspection fail / DQ"
+  },
+  {
+    code:"R09", summary:"Height limit 96\" outside ascent zone; 108\" inside ascent zone during endgame only.",
+    full:`Outside the ASCENT ZONE, no part of a ROBOT (including extensions, game pieces in possession, etc.) may extend above 96" off the carpet at any time.\n\nThis ceiling accommodates the HIGH SPIRE OPENING at 84"–92" and the LOWER RAIL at 60".\n\nInside the ASCENT ZONE during the ENDGAME only, the ceiling rises to 108" to allow APEX FLAG capture from the MAIN RAIL.\n\nViolation: FOUL per second of violation.`,
+    penalty:"FOUL per second"
+  },
+  {
+    code:"R10", summary:"On-board colour sensing is the team's responsibility — the field provides no colour telemetry.",
+    full:`ROBOTS may include sensors to detect CHROMABLOCK colour. The PRISMATIC FIELD does not provide a colour-by-block telemetry feed; teams must implement on-board sensing.\n\nNo violation specified — informational rule.`,
+    penalty:"—"
+  },
+  {
+    code:"R11", summary:"Cameras permitted. Field provides 14 AprilTag fiducials (36h11 family).",
+    full:`Cameras are permitted. The FIELD provides AprilTag fiducials at fixed locations on the ALLIANCE WALLS, side rails, and PRISM CORE for vision-based localisation.\n\nAprilTag family: 36h11. Tag outer dimension: 5.5" (140 mm). Usable code area: 4.25" (108 mm). 14 tags total.\n\nAprilTag IDs and absolute (X, Y, Z) coordinates are published in the official FIELD CAD in the sketch named "AprilTag_Anchor_Points", with origin at the south-west corner of the FIELD (red side, south GUARDRAIL), Z up.\n\nNo violation specified — informational rule.`,
+    penalty:"—"
+  },
+  {
+    code:"R12", summary:"No limit on brushless motors. All motors must be FRC 2026-legal.",
+    full:`There is no limit on the number of brushless motors a ROBOT may use. All motors must be FRC 2026-legal motors. Compressors are not counted toward any motor consideration.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R13", summary:"Stored pneumatic pressure ≤ 120 psi.",
+    full:`Stored pneumatic pressure may not exceed 120 psi at any point in the system.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R14", summary:"Single 12V SLA battery required. LiFePO4 and lithium chemistries NOT permitted.",
+    full:`A single 12V SLA (sealed lead-acid) battery, FRC-approved, is required. LiFePO4 and other lithium-chemistry batteries are NOT permitted.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R15", summary:"Team number on ≥2 sides in characters ≥4\" tall.",
+    full:`Team number must be displayed on at least two sides of the ROBOT in characters at least 4" tall, contrasting with the ROBOT's background colour.\n\nViolation: Inspection warning; FOUL if not addressed by next match.`,
+    penalty:"Warning / FOUL"
+  },
+  {
+    code:"R16", summary:"No energy storage used to launch blocks beyond the G19 6\" limit.",
+    full:`Energy storage devices (springs, elastics, pneumatics) used to launch CHROMABLOCKS at velocities exceeding the LAUNCH limit (G19) are prohibited.\n\nViolation: Inspection failure if installed; FOUL per use.`,
+    penalty:"Inspection fail / FOUL"
+  },
+  {
+    code:"R17", summary:"Robot must not damage the field or other robots. No sharp edges in contact zones.",
+    full:`ROBOTS must be constructed such that they will not damage the FIELD or other ROBOTS during normal play. Sharp edges, exposed fasteners, and brittle materials in contact zones are prohibited.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R18", summary:"Robot must respond to field E-stop signal by ceasing all motion within 1 second.",
+    full:`A ROBOT must respond to a field-issued E-stop signal by ceasing all motion within 1 second.\n\nViolation: Inspection failure; DQ if non-responsive during a match.`,
+    penalty:"Inspection fail / DQ"
+  },
+  {
+    code:"R19", summary:"Communicate via FRC field radio only. No third-party wireless transmitters on robot.",
+    full:`ROBOTS may communicate with the DRIVER STATION only via the FRC field radio. No third-party wireless transmitters or receivers may be present on the ROBOT.\n\nViolation: Inspection failure.`,
+    penalty:"Inspection fail"
+  },
+  {
+    code:"R20", summary:"Where this manual is silent, FRC 2026 manual rules apply.",
+    full:`Where this manual is silent on a robot rule, the corresponding rule from the FRC 2026 manual applies. CADathon teams may petition the Game Design Committee for clarifications via the team's registered question form.\n\nNo violation specified — informational rule.`,
+    penalty:"—"
+  }
+];
+
+function badgeFor(p) {
+  if (p.includes("DQ") && p.includes("TECH")) return `<span class="badge b-tech">${p}</span>`;
+  if (p === "DQ") return `<span class="badge b-dq">DQ</span>`;
+  if (p.includes("DQ")) return `<span class="badge b-dq">${p}</span>`;
+  if (p.includes("Inspection")) return `<span class="badge b-insp">${p}</span>`;
+  if (p.includes("TECH")) return `<span class="badge b-tech">${p}</span>`;
+  if (p.includes("FOUL")) return `<span class="badge b-foul">${p}</span>`;
+  return `<span class="badge b-none">${p}</span>`;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function highlightText(text, q) {
+  if (!q) return escapeHtml(text);
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return escapeHtml(text).replace(re, '<mark style="background:rgba(232,224,200,0.3);color:var(--accent);border-radius:2px;padding:0 1px">$1</mark>');
+}
+
+function renderRules(list, containerId) {
+  document.getElementById(containerId).innerHTML = list.map(r => `
+    <div class="rule-item" data-rule-id="${r.code}" id="rule-${r.code}">
+      <div class="rule-header">
+        <div class="rule-code">${r.code}</div>
+        <div class="rule-summary">${escapeHtml(r.summary)}</div>
+        <svg class="rule-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 6l4 4 4-4"/>
+        </svg>
+      </div>
+      <div class="rule-body">
+        <div class="rule-full-text" data-raw="${escapeHtml(r.full)}">${escapeHtml(r.full).replace(/\n/g,'<br>')}</div>
+        <div class="rule-meta">Penalty: ${badgeFor(r.penalty)}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.querySelectorAll(`#${containerId} .rule-header`).forEach(header => {
+    header.addEventListener('click', () => {
+      header.closest('.rule-item').classList.toggle('open');
+    });
+  });
+}
+
+renderRules(gameRules, 'rules-list');
+renderRules(robotRules, 'robot-rules-list');
+
+// ── NAV ──
+function activateSection(sec) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.section === sec));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('s-' + sec).classList.add('active');
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activateSection(btn.dataset.section);
+    clearHighlights();
+    document.getElementById('search').value = '';
+    document.getElementById('search-results').style.display = 'none';
+  });
+});
+
+// ── HIGHLIGHT UTILITIES ──
+function clearHighlights() {
+  document.querySelectorAll('.search-highlight-target').forEach(el => el.classList.remove('search-highlight-target'));
+  // restore rule full-text to plain (no mark tags)
+  document.querySelectorAll('.rule-full-text[data-raw]').forEach(el => {
+    el.innerHTML = el.dataset.raw.replace(/\n/g, '<br>');
+  });
+  document.querySelectorAll('.rule-summary').forEach(el => {
+    const item = el.closest('.rule-item');
+    if (item) {
+      const code = item.dataset.ruleId;
+      const allRules = [...gameRules, ...robotRules];
+      const r = allRules.find(x => x.code === code);
+      if (r) el.innerHTML = escapeHtml(r.summary);
+    }
+  });
+}
+
+function applyHighlights(q) {
+  if (!q) return;
+  const ql = q.toLowerCase();
+  document.querySelectorAll('.rule-full-text[data-raw]').forEach(el => {
+    if (el.dataset.raw.toLowerCase().includes(ql)) {
+      el.innerHTML = highlightText(el.dataset.raw, q).replace(/\n/g, '<br>');
+    }
+  });
+  document.querySelectorAll('.rule-summary').forEach(el => {
+    if (el.textContent.toLowerCase().includes(ql)) {
+      el.innerHTML = highlightText(el.textContent, q);
+    }
+  });
+}
+
+// ── SEARCH INDEX ──
+// Each entry: { label, desc, section, match, ruleId? (for rules), anchorId? (for sections) }
+const sectionEntries = [
+  {label:'Spires', desc:'Scoring values, heights, cycling, cycle port directions', section:'spires',
+   match:'spire low mid high opening 24 54 84 cycling rainbow contested channel 13.5 8x8 polycarbonate aluminium'},
+  {label:'Prism core', desc:'Depth scoring, congestion penalty, TRIAD, full face bonus', section:'prismcore',
+   match:'prism core slot face congestion triad multiplier full face bonus 1.3 depth position 28 hexagonal 6 faces 12 36'},
+  {label:'Endgame / climb', desc:'Climb tiers, apex flag, teamlift, rail heights', section:'endgame',
+   match:'endgame shallow deep apex flag teamlift climb 24 48 78 96 60 lower main rail park velcro 5lb 140 20'},
+  {label:'Bonuses', desc:'Rainbow, chroma sweep, momentum surge, TRIAD', section:'bonuses',
+   match:'rainbow bonus chroma sweep momentum surge triad 10 15 20 renewable low mid high 75 55 45'},
+  {label:'Ranking points', desc:'RP conditions, tiebreakers, playoff tiebreaker', section:'rp',
+   match:'ranking points rp architect chromatic summit momentum win tie seeding 130 110 30 20 tiebreaker coin flip'},
+  {label:'Field layout', desc:'Zones, block pre-positioning, chromachute positions', section:'field',
+   match:'field zone operational ascent centerline chromachute human player buffer cache 27 54 3ft 6ft 7 18 pre-position'},
+  {label:'Ascent truss spec', desc:'Rail heights, U-channel dimensions, tolerances', section:'truss',
+   match:'truss main lower rail climb face u-channel 1.75 2.75 96 60 tolerances apex flag velcro 2x3 6063 t5 aluminium 6061 32 spacing 12 offset'},
+  {label:'Chromablocks', desc:'Size, weight, colours, possession limit', section:'pieces',
+   match:'chromablock 6 inch foam cube colour red yellow green blue 4oz 100 neutral possession 3 eva closed cell dyed'},
+  {label:'Game summary', desc:'Format, objectives, phases overview', section:'summary',
+   match:'summary overview 2:30 alliances format phases neutral cadathon prismatic 150 seconds spire core truss'},
+  {label:'Match timeline', desc:'Phase timing, key events at 1:00', section:'timeline',
+   match:'timeline autonomous teleop endgame 2:30 1:00 0:20 surge refresh 30 seconds 20 seconds 1:40'},
+  {label:'CADathon judging', desc:'Design package, judging criteria, inspection checklist', section:'cadathon',
+   match:'cadathon judging recalc onshape google doc design package inspection checklist criteria robustness feasibility elegance mechanism'},
+];
+
+const ruleEntries = [
+  ...gameRules.map(r => ({
+    label: r.code,
+    desc: r.summary,
+    section: 'gamerules',
+    ruleId: r.code,
+    match: r.code + ' ' + r.summary + ' ' + r.full + ' ' + r.penalty
+  })),
+  ...robotRules.map(r => ({
+    label: r.code,
+    desc: r.summary,
+    section: 'robotrules',
+    ruleId: r.code,
+    match: r.code + ' ' + r.summary + ' ' + r.full + ' ' + r.penalty
+  })),
+];
+
+const searchIndex = [...ruleEntries, ...sectionEntries];
+
+// ── SEARCH LOGIC ──
+const searchEl = document.getElementById('search');
+const resultsEl = document.getElementById('search-results');
+
+function getSnippet(text, q, maxLen = 80) {
+  const i = text.toLowerCase().indexOf(q.toLowerCase());
+  if (i === -1) return text.substring(0, maxLen) + '…';
+  const start = Math.max(0, i - 30);
+  const end = Math.min(text.length, i + q.length + 50);
+  return (start > 0 ? '…' : '') + text.substring(start, end) + (end < text.length ? '…' : '');
+}
+
+searchEl.addEventListener('input', () => {
+  const q = searchEl.value.trim();
+  const ql = q.toLowerCase();
+  if (!q) { resultsEl.style.display = 'none'; return; }
+
+  const hits = searchIndex
+    .filter(i => i.match.toLowerCase().includes(ql))
+    .slice(0, 10);
+
+  if (!hits.length) {
+    resultsEl.innerHTML = '<div class="sr-empty">No results</div>';
+    resultsEl.style.display = 'block';
+    return;
+  }
+
+  resultsEl.innerHTML = hits.map(h => {
+    // find best snippet from full text for rules
+    let snippet = '';
+    if (h.ruleId) {
+      const allRules = [...gameRules, ...robotRules];
+      const r = allRules.find(x => x.code === h.ruleId);
+      if (r) {
+        const searchIn = r.full.toLowerCase().includes(ql) ? r.full : r.summary;
+        snippet = getSnippet(searchIn, q);
+      }
+    } else {
+      snippet = h.desc;
+    }
+    const highlightedLabel = highlightText(h.label, q);
+    const highlightedSnippet = highlightText(snippet, q);
+    return `<div class="sr-item" data-section="${h.section}" data-rule-id="${h.ruleId || ''}">
+      <strong>${highlightedLabel}</strong> — <span style="font-size:12px;color:var(--muted)">${highlightedSnippet}</span>
+    </div>`;
+  }).join('');
+
+  resultsEl.style.display = 'block';
+
+  resultsEl.querySelectorAll('.sr-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const sec = el.dataset.section;
+      const ruleId = el.dataset.ruleId;
+
+      // switch section
+      activateSection(sec);
+
+      // clear old highlights, apply new
+      clearHighlights();
+      applyHighlights(q);
+
+      searchEl.value = '';
+      resultsEl.style.display = 'none';
+
+      // Use two rAF frames: first lets the section become visible, second lets
+      // the dropdown open and reflow, then scrollIntoView works on real position.
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (ruleId) {
+          const ruleEl = document.getElementById('rule-' + ruleId);
+          if (ruleEl) {
+            ruleEl.classList.add('open');
+            ruleEl.classList.add('search-highlight-target');
+            ruleEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } else {
+          document.querySelector('.content').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }));
+    });
+  });
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-inner')) resultsEl.style.display = 'none';
+});
+</script>
+
+<style>
+.search-highlight-target {
+  border-left-color: #E8E0C8 !important;
+  animation: rule-flash 1.4s ease forwards;
+}
+@keyframes rule-flash {
+  0%   { background: rgba(232,224,200,0.12); }
+  60%  { background: rgba(232,224,200,0.06); }
+  100% { background: var(--surface2); }
+}
+</style>
+</body>
+</html>
